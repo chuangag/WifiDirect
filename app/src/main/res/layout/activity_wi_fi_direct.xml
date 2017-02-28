@@ -15,7 +15,12 @@
         android:id="@+id/msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No Received"/>
+        android:text="Received Messages"/>
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:id="@+id/info_list"
+        ></ListView>
 
     <LinearLayout
         android:layout_width="match_parent"

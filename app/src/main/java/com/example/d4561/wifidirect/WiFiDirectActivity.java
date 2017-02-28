@@ -16,9 +16,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.d4561.wifidirect.DeviceListFragment.DeviceActionListener;
+
+import java.util.List;
 
 public class WiFiDirectActivity extends AppCompatActivity implements ChannelListener, DeviceActionListener {
 
@@ -43,8 +47,26 @@ public class WiFiDirectActivity extends AppCompatActivity implements ChannelList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wi_fi_direct);
 
-        // add necessary intent values to be matched.
+        //建立資料庫
+        // 建立資料庫物件
+        InfoSendedDB infoSendedDB = new InfoSendedDB(getApplicationContext());
 
+        // 如果資料庫是空的，就建立一些範例資料
+        // 這是為了方便測試用的，完成應用程式以後可以拿掉
+        Log.d(TAG, "to here");
+        Log.d(TAG, String.valueOf(infoSendedDB.getCount()));
+        if (infoSendedDB.getCount() == 0) {
+            infoSendedDB.sample();
+        }
+
+        // 取得所有記事資料
+        List<Info> items = infoSendedDB.getAll();
+
+        ArrayAdapter<Info> infoAdapter = new ArrayAdapter<Info>(this,android.R.layout.simple_expandable_list_item_1,items);
+        ListView infoList= (ListView) findViewById(R.id.info_list);
+        infoList.setAdapter(infoAdapter);
+
+        // add necessary intent values to be matched.
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
         intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
