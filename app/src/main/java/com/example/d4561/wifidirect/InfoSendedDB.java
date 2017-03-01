@@ -83,7 +83,7 @@ public class InfoSendedDB {
         // 第一個參數是表格名稱
         // 第二個參數是沒有指定欄位值的預設值
         // 第三個參數是包裝新增資料的ContentValues物件
-        long id = db.insert(TABLE_NAME, null, cv);
+        long id = db.insert(TABLE_NAME, DATETIME_COLUMN, cv);
 
         // 設定編號
         item.setId(id);
