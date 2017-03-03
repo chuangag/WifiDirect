@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="FROM"/>
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_margin="2sp"
+            android:gravity="center_vertical"
+
+            android:id="@+id/name_sender"
+            />
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="TO"/>
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_margin="2sp"
+            android:gravity="center_vertical"
+
+            android:id="@+id/name_receiver"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal" android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="AT  "/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2sp"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:id="@+id/time_of_message"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

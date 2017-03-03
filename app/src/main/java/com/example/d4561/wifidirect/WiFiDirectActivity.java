@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -34,7 +33,10 @@ public class WiFiDirectActivity extends AppCompatActivity implements ChannelList
     private final IntentFilter intentFilter = new IntentFilter();
     private Channel channel;
     private BroadcastReceiver receiver = null;
-
+    private InfoSendedDB infoSendedDB;
+    private List<Info> items;
+    private  InfoAdapter infoAdapter;
+    private ListView infoList;
     /**
      * @param isWifiP2pEnabled the isWifiP2pEnabled to set
      */
@@ -47,23 +49,25 @@ public class WiFiDirectActivity extends AppCompatActivity implements ChannelList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wi_fi_direct);
 
+        infoList= (ListView) findViewById(R.id.info_list);
         //建立資料庫
         // 建立資料庫物件
-        InfoSendedDB infoSendedDB = new InfoSendedDB(getApplicationContext());
+        infoSendedDB = new InfoSendedDB(getApplicationContext());
 
         // 如果資料庫是空的，就建立一些範例資料
         // 這是為了方便測試用的，完成應用程式以後可以拿掉
         Log.d(TAG, "to here");
         Log.d(TAG, String.valueOf(infoSendedDB.getCount()));
-        if (infoSendedDB.getCount() == 0) {
+        /*if (infoSendedDB.getCount() == 0) {
             infoSendedDB.sample();
-        }
+        }*/
 
         // 取得所有記事資料
-        List<Info> items = infoSendedDB.getAll();
+        items = infoSendedDB.getAll();
 
-        ArrayAdapter<Info> infoAdapter = new ArrayAdapter<Info>(this,android.R.layout.simple_expandable_list_item_1,items);
-        ListView infoList= (ListView) findViewById(R.id.info_list);
+        //ArrayAdapter<Info> infoAdapter = new ArrayAdapter<Info>(this,android.R.layout.simple_expandable_list_item_1,items);
+        //ListView infoList= (ListView) findViewById(R.id.info_list);
+        infoAdapter=new InfoAdapter(this,R.layout.singleinfo,items);
         infoList.setAdapter(infoAdapter);
 
         // add necessary intent values to be matched.

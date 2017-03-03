@@ -36,9 +36,9 @@ public class InfoSendedDB {
     public static final String CREATE_TABLE =
             "CREATE TABLE " + TABLE_NAME + " (" +
                     KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    DATETIME_COLUMN + "TEXT,"+
-                    SENDER_COLUMN+"TEXT,"+
-                    RECEIVER_COLUMN+"TEXT)";/* +
+                    DATETIME_COLUMN + " TEXT, "+
+                    SENDER_COLUMN+" TEXT, "+
+                    RECEIVER_COLUMN+" TEXT)";/* +
                     COLOR_COLUMN + " INTEGER NOT NULL, " +
                     TITLE_COLUMN + " TEXT NOT NULL, " +
                     CONTENT_COLUMN + " TEXT NOT NULL, " +
@@ -70,7 +70,7 @@ public class InfoSendedDB {
         cv.put(DATETIME_COLUMN, item.getTimeOfMessage());
         cv.put(SENDER_COLUMN, item.getSender());
         cv.put(RECEIVER_COLUMN, item.getReceiver());
-        Log.d("WifiDirect", "break here?");
+        Log.d("WifiDirect", "break here?"+DATETIME_COLUMN+cv.get(DATETIME_COLUMN));
         /*
 
         cv.put(CONTENT_COLUMN, item.getContent());

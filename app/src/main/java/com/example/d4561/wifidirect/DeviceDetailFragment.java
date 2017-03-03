@@ -43,6 +43,9 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
     private WifiP2pDevice device;
     private WifiP2pInfo info=null;
     ProgressDialog progressDialog = null;
+    private InfoSendedDB infoSendedDB;
+    public static String deviceName;
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -55,6 +58,8 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         mContentView = inflater.inflate(R.layout.device_detail, null);
         View connectBtn=mContentView.findViewById(R.id.btn_connect);
 
+        infoSendedDB = new InfoSendedDB(getActivity().getApplicationContext());
+
         connectBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -63,6 +68,8 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
                 WifiP2pConfig config = new WifiP2pConfig();
                 config.deviceAddress = device.deviceAddress;
                 config.wps.setup = WpsInfo.PBC;
+                //record the device name when click, MUST BE CONNECT FROM THE SERVER, NOT A GOOD WAY ACTUALLY
+                deviceName=device.deviceName;
                 if (progressDialog != null && progressDialog.isShowing()) {
                     progressDialog.dismiss();
                 }
@@ -193,7 +200,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         }
         this.info = info;
         this.getView().setVisibility(View.VISIBLE);
-
+        Log.d(WiFiDirectActivity.TAG, "Name"+deviceName);
         // The owner IP is now known.
         TextView view = (TextView) mContentView.findViewById(R.id.group_owner);
         view.setText(getResources().getString(R.string.group_owner_text)
@@ -257,11 +264,12 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
     }
 
 
+
     /**
      *  A simple server socket that accepts connection and writes some data on
      * the stream.
      */
-    public static class InfoServerAsyncTask extends AsyncTask<Void,Void,String>{
+    public class InfoServerAsyncTask extends AsyncTask<Void,Void,String>{
         private Context context;
         private TextView statusText;
 
@@ -289,7 +297,8 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
                 copyMsg(inputstream,outputStream);
                 serverSocket.close();
                 //client.close();
-                return "Info received"+outputStream.toString();
+
+                return outputStream.toString();
             } catch (IOException e) {
                 Log.e(WiFiDirectActivity.TAG, e.getMessage());
                 return "fail";
@@ -297,16 +306,25 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
             //return "test";
         }
 
+
         @Override
         protected void onPostExecute(String result) {
             if (result != null) {
                 statusText.setText("Connection:  " + result);
+                Info item=new Info(0,result,device.deviceName,"ME");
+                infoSendedDB.insert(item);
+
                /* Intent intent = new Intent();
                 ntent.setAction(android.content.Intent.ACTION_VIEW);
                 intent.setDataAndType(Uri.parse("file://" + result), "image/*");
                 context.startActivity(intent);*/
             }
 
+        }
+        public void  addRecord(String outputStream){
+            Info item=new Info(0,outputStream,device.deviceName,"ME");
+            infoSendedDB.insert(item);
+            return ;
         }
     }
 

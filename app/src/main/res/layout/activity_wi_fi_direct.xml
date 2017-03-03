@@ -11,15 +11,18 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.d4561.wifidirect.WiFiDirectActivity">
 
-    <TextView
+    <!--<TextView
         android:id="@+id/msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Received Messages"/>
+        android:text="Received Messages"
+        android:textSize="30sp"
+        android:padding="3dp"/>-->s
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="120dp"
+        android:layout_height="60dp"
         android:id="@+id/info_list"
+
         ></ListView>
 
     <LinearLayout
