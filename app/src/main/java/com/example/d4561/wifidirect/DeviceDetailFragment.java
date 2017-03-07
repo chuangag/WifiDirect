@@ -60,6 +60,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 
         infoSendedDB = new InfoSendedDB(getActivity().getApplicationContext());
 
+
         connectBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -269,7 +270,9 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
      *  A simple server socket that accepts connection and writes some data on
      * the stream.
      */
+
     public class InfoServerAsyncTask extends AsyncTask<Void,Void,String>{
+
         private Context context;
         private TextView statusText;
 
@@ -298,6 +301,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
                 serverSocket.close();
                 //client.close();
 
+
                 return outputStream.toString();
             } catch (IOException e) {
                 Log.e(WiFiDirectActivity.TAG, e.getMessage());
@@ -311,8 +315,10 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         protected void onPostExecute(String result) {
             if (result != null) {
                 statusText.setText("Connection:  " + result);
+
                 Info item=new Info(0,result,device.deviceName,"ME");
                 infoSendedDB.insert(item);
+
 
                /* Intent intent = new Intent();
                 ntent.setAction(android.content.Intent.ACTION_VIEW);
@@ -321,11 +327,13 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
             }
 
         }
+
         public void  addRecord(String outputStream){
             Info item=new Info(0,outputStream,device.deviceName,"ME");
             infoSendedDB.insert(item);
             return ;
         }
+
     }
 
 
