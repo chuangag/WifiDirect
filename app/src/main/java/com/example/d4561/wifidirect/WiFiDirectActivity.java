@@ -1,5 +1,6 @@
 package com.example.d4561.wifidirect;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -29,7 +30,7 @@ public class WiFiDirectActivity extends AppCompatActivity implements ChannelList
     private WifiP2pManager manager;
     private boolean isWifiP2pEnabled = false;
     private boolean retryChannel = false;
-
+    public Activity activityReference;
     private final IntentFilter intentFilter = new IntentFilter();
     private Channel channel;
     private BroadcastReceiver receiver = null;
@@ -44,10 +45,15 @@ public class WiFiDirectActivity extends AppCompatActivity implements ChannelList
         this.isWifiP2pEnabled = isWifiP2pEnabled;
     }
 
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wi_fi_direct);
+
+        activityReference=this;
 
         infoList= (ListView) findViewById(R.id.info_list);
         //建立資料庫

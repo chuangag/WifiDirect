@@ -20,7 +20,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.d4561.wifidirect.DeviceListFragment.DeviceActionListener;
 
@@ -32,6 +34,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * A fragment that manages a particular peer and allows interaction with device
@@ -41,6 +44,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 
     protected static final int CHOOSE_FILE_RESULT_CODE = 20;
     private View mContentView = null;
+    private ListView infoList;
     private WifiP2pDevice device;
     private WifiP2pInfo info=null;
     ProgressDialog progressDialog = null;
@@ -55,6 +59,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //infoListView=(ListView) inflater.inflate(R.layout.activity_wi_fi_direct,null);
 
         mContentView = inflater.inflate(R.layout.device_detail, null);
         View connectBtn=mContentView.findViewById(R.id.btn_connect);
@@ -319,8 +324,25 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 
                 Info item=new Info(0,result,device.deviceName,"ME");
                 infoSendedDB.insert(item);
+                List<Info> items = infoSendedDB.getAll();
 
 
+                infoList= (ListView) ((WiFiDirectActivity)getActivity()).findViewById(R.id.info_list);
+
+                InfoAdapter infoAdapter=new InfoAdapter(((WiFiDirectActivity)getActivity()),R.layout.singleinfo,items);
+                if(infoList!=null){
+                    infoList.setAdapter(infoAdapter);
+                    Log.d(WiFiDirectActivity.TAG, "Infolist is not null");
+
+                }
+                else
+                    Log.d(WiFiDirectActivity.TAG, "Infolist is null");
+                infoAdapter.notifyDataSetChanged();
+                Toast.makeText(((WiFiDirectActivity)getActivity()),
+                        "Received:  " + result,
+                        Toast.LENGTH_LONG).show();
+                ((WiFiDirectActivity)getActivity()).disconnect();
+                //infoList.invalidate();
                /* Intent intent = new Intent();
                 ntent.setAction(android.content.Intent.ACTION_VIEW);
                 intent.setDataAndType(Uri.parse("file://" + result), "image/*");
