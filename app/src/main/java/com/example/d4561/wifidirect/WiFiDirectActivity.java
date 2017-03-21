@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.d4561.wifidirect.DeviceListFragment.DeviceActionListener;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 public class WiFiDirectActivity extends AppCompatActivity implements ChannelListener, DeviceActionListener {
@@ -45,6 +46,21 @@ public class WiFiDirectActivity extends AppCompatActivity implements ChannelList
         this.isWifiP2pEnabled = isWifiP2pEnabled;
     }
 
+    private void deletePersistentGroups(){
+        try {
+            Method[] methods = WifiP2pManager.class.getMethods();
+            for (int i = 0; i < methods.length; i++) {
+                if (methods[i].getName().equals("deletePersistentGroup")) {
+                    // Delete any persistent group
+                    for (int netid = 0; netid < 32; netid++) {
+                        methods[i].invoke(manager, channel, netid, null);
+                    }
+                }
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 
@@ -84,6 +100,10 @@ public class WiFiDirectActivity extends AppCompatActivity implements ChannelList
 
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         channel = manager.initialize(this, getMainLooper(), null);
+
+
+        //try
+        deletePersistentGroups();
     }
 
     /** register the BroadcastReceiver with the intent values to be matched */
@@ -184,6 +204,28 @@ public class WiFiDirectActivity extends AppCompatActivity implements ChannelList
 
     @Override
     public void connect(WifiP2pConfig config) {
+
+        //try to become GO when connecting
+/*  NOT WORKING
+        final DeviceDetailFragment fragment = (DeviceDetailFragment) getFragmentManager()
+                .findFragmentById(R.id.frag_detail);
+        manager.createGroup(channel, new ActionListener() {
+
+            @Override
+            public void onFailure(int reasonCode) {
+                Log.d(TAG, "Disconnect failed. Reason :" + reasonCode);
+
+            }
+
+            @Override
+            public void onSuccess() {
+                fragment.getView().setVisibility(View.GONE);
+            }
+
+        });*/
+
+
+
         manager.connect(channel, config, new ActionListener() {
             /*// Picking the first device found on the network.
         WifiP2pDevice device = peers.get(0);
@@ -192,6 +234,7 @@ public class WiFiDirectActivity extends AppCompatActivity implements ChannelList
         config.deviceAddress = device.deviceAddress;
         config.wps.setup = WpsInfo.PBC;
 */
+
             @Override
             public void onSuccess() {
                 // WiFiDirectBroadcastReceiver will notify us. Ignore for now.
@@ -205,11 +248,16 @@ public class WiFiDirectActivity extends AppCompatActivity implements ChannelList
         });
     }
 
+
+
+
     @Override
     public void disconnect() {
+
         final DeviceDetailFragment fragment = (DeviceDetailFragment) getFragmentManager()
                 .findFragmentById(R.id.frag_detail);
         fragment.resetViews();
+
         manager.removeGroup(channel, new ActionListener() {
 
             @Override
@@ -234,6 +282,7 @@ public class WiFiDirectActivity extends AppCompatActivity implements ChannelList
             resetData();
             retryChannel = true;
             manager.initialize(this, getMainLooper(), this);
+
         } else {
             Toast.makeText(this,
                     "Severe! Channel is probably lost premanently. Try Disable/Re-Enable P2P.",
@@ -277,4 +326,8 @@ public class WiFiDirectActivity extends AppCompatActivity implements ChannelList
         }
 
     }
+
+
+
+
 }

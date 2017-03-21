@@ -75,8 +75,16 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
                 WifiP2pConfig config = new WifiP2pConfig();
                 config.deviceAddress = device.deviceAddress;
                 config.wps.setup = WpsInfo.PBC;
+
+
                 //record the device name when click, MUST BE CONNECT FROM THE SERVER, NOT A GOOD WAY ACTUALLY
-                deviceName=device.deviceName;
+                if(device.deviceName!=null)
+                    deviceName=device.deviceName;
+                else
+                    Toast.makeText(((WiFiDirectActivity)getActivity()),
+                            "Please Connect from the group owner",
+                            Toast.LENGTH_LONG).show();
+
                 if (progressDialog != null && progressDialog.isShowing()) {
                     progressDialog.dismiss();
                 }
@@ -321,9 +329,22 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         protected void onPostExecute(String result) {
             if (result != null) {
                 statusText.setText("Connection:  " + result);
+/*
+                if(device.deviceName!=null)
+                    deviceName=device.deviceName;
+                else
+                    Toast.makeText(((WiFiDirectActivity)getActivity()),
+                            "Please Connect from the group owner",
+                            Toast.LENGTH_LONG).show();*/
 
-                Info item=new Info(0,result,device.deviceName,"ME");
-                infoSendedDB.insert(item);
+                if(deviceName==null){
+                    Info item=new Info(0,result,"UnKown(connect from non-GO)","ME");
+                    infoSendedDB.insert(item);}
+                else{
+                    Info item=new Info(0,result,deviceName,"ME");
+                    infoSendedDB.insert(item);
+                }
+
                 List<Info> items = infoSendedDB.getAll();
 
 
@@ -341,6 +362,9 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
                 Toast.makeText(((WiFiDirectActivity)getActivity()),
                         "Received:  " + result,
                         Toast.LENGTH_LONG).show();
+
+
+                //disconnect after sended message
                 ((WiFiDirectActivity)getActivity()).disconnect();
                 //infoList.invalidate();
                /* Intent intent = new Intent();
