@@ -31,17 +31,27 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <fragment
+            class="com.example.d4561.wifidirect.BluetoothChatFragment"
+            android:id="@+id/bt_frag_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <!-- Preview: layout=@layout/row_devices -->
+        </fragment>
+        <fragment
             class="com.example.d4561.wifidirect.DeviceListFragment"
             android:id="@+id/frag_list"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/phone_list_height">
+            android:layout_height="0dp"
+            android:layout_weight="1" >
             <!-- Preview: layout=@layout/row_devices -->
         </fragment>
         <fragment
             class="com.example.d4561.wifidirect.DeviceDetailFragment"
             android:id="@+id/frag_detail"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_weight="1">
             <!-- Preview: layout=@layout/device_detail -->
         </fragment>
     </LinearLayout>

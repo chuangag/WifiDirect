@@ -101,6 +101,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
                 ((DeviceActionListener) getActivity()).connect(config);
 
 
+
             }
         });
 
@@ -110,6 +111,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
                     @Override
                     public void onClick(View v) {
                         ((DeviceActionListener) getActivity()).disconnect();
+                        ((WiFiDirectActivity)getActivity()).disconnect();
                     }
                 });
 
@@ -158,55 +160,9 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         serviceIntent.putExtra(InfoTransferService.EXTRAS_GROUP_OWNER_ADDRESS, info.groupOwnerAddress.getHostAddress());
         serviceIntent.putExtra(InfoTransferService.EXTRAS_GROUP_OWNER_PORT, 8988);
         getActivity().startService(serviceIntent);
-        /*Uri uri = data.getData();
-        TextView statusText = (TextView) mContentView.findViewById(R.id.status_text);
-        statusText.setText("Sending: " + uri);
-        Log.d(WiFiDirectActivity.TAG, "Intent----------- " + uri);
 
-        Intent serviceIntent = new Intent(getActivity(), FileTransferService.class);
-        serviceIntent.setAction(FileTransferService.ACTION_SEND_FILE);
-        serviceIntent.putExtra(FileTransferService.EXTRAS_FILE_PATH, uri.toString());
-        serviceIntent.putExtra(FileTransferService.EXTRAS_GROUP_OWNER_ADDRESS,
-                info.groupOwnerAddress.getHostAddress());
-        serviceIntent.putExtra(FileTransferService.EXTRAS_GROUP_OWNER_PORT, 8988);
-        getActivity().startService(serviceIntent);*/
     }
-    /*
-    private void sendConnectionInfo(){
-        Socket socket = new Socket();
 
-        try {
-            Log.d(WiFiDirectActivity.TAG, "Opening client socket - ");
-            socket.bind(null);
-            socket.connect((new InetSocketAddress(host, port)), SOCKET_TIMEOUT);
-
-            Log.d(WiFiDirectActivity.TAG, "Client socket - " + socket.isConnected());
-            OutputStream stream = socket.getOutputStream();
-            ContentResolver cr = context.getContentResolver();
-            InputStream is = null;
-            try {
-                is = cr.openInputStream(Uri.parse(fileUri));
-            } catch (FileNotFoundException e) {
-                Log.d(WiFiDirectActivity.TAG, e.toString());
-            }
-            DeviceDetailFragment.copyFile(is, stream);
-            Log.d(WiFiDirectActivity.TAG, "Client: Data written");
-        } catch (IOException e) {
-            Log.e(WiFiDirectActivity.TAG, e.getMessage());
-        } finally {
-            if (socket != null) {
-                if (socket.isConnected()) {
-                    try {
-                        socket.close();
-                    } catch (IOException e) {
-                        // Give up
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    }
-*/
     @Override
     public void onConnectionInfoAvailable(final WifiP2pInfo info) {
 

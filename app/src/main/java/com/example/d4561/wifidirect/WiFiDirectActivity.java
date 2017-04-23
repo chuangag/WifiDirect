@@ -1,6 +1,7 @@
 package com.example.d4561.wifidirect;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -11,12 +12,16 @@ import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ChannelListener;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -26,6 +31,47 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public class WiFiDirectActivity extends AppCompatActivity implements ChannelListener, DeviceActionListener {
+
+    //BT
+// Intent request codes
+    private static final int REQUEST_CONNECT_DEVICE_SECURE = 1;
+    private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
+    private static final int REQUEST_ENABLE_BT = 3;
+
+    // Layout Views
+    private ListView mConversationView;
+    private EditText mOutEditText;
+    private Button mSendButton;
+
+    /**
+     * Name of the connected device
+     */
+    private String mConnectedDeviceName = null;
+
+    /**
+     * Array adapter for the conversation thread
+     */
+    private ArrayAdapter<String> mConversationArrayAdapter;
+
+    /**
+     * String buffer for outgoing messages
+     */
+    private StringBuffer mOutStringBuffer;
+
+    /**
+     * Local Bluetooth adapter
+     */
+    private BluetoothAdapter mBluetoothAdapter = null;
+
+    /**
+     * Member object for the chat services
+     */
+    private BluetoothChatService mChatService = null;
+
+
+    // Whether the Log Fragment is currently shown
+    private boolean mLogShown;
+
 
     public static final String TAG = "WifiDirect";
     private WifiP2pManager manager;
@@ -69,6 +115,18 @@ public class WiFiDirectActivity extends AppCompatActivity implements ChannelList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wi_fi_direct);
 
+        //BT
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            BluetoothChatFragment fragment = new BluetoothChatFragment();
+            //transaction.replace(R.id.sample_content_fragment, fragment);
+            transaction.commit();
+        }
+
+
+
+
+
         activityReference=this;
 
         infoList= (ListView) findViewById(R.id.info_list);
@@ -105,6 +163,8 @@ public class WiFiDirectActivity extends AppCompatActivity implements ChannelList
         //try
         deletePersistentGroups();
     }
+
+
 
     /** register the BroadcastReceiver with the intent values to be matched */
     @Override
@@ -189,6 +249,23 @@ public class WiFiDirectActivity extends AppCompatActivity implements ChannelList
                     }
                 });
                 return true;
+            /*case R.id.secure_connect_scan: {
+                // Launch the DeviceListActivity to see devices and do scan
+                Intent serverIntent = new Intent(getActivity(), DeviceListActivity.class);
+                startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_SECURE);
+                return true;
+            }
+            case R.id.insecure_connect_scan: {
+                // Launch the DeviceListActivity to see devices and do scan
+                Intent serverIntent = new Intent(getActivity(), DeviceListActivity.class);
+                startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
+                return true;
+            }
+            case R.id.discoverable: {
+                // Ensure this device is discoverable by others
+                ensureDiscoverable();
+                return true;
+            }*/
             default:
                 return super.onOptionsItemSelected(item);
         }
