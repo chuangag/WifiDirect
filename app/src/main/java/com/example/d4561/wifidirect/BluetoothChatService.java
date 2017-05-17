@@ -411,6 +411,8 @@ public class BluetoothChatService {
             }
             mmSocket = tmp;
             mState = STATE_CONNECTING;
+            long time= System.currentTimeMillis();
+            Log.d(TAG, "connect started :" + time);
         }
 
         public void run() {
